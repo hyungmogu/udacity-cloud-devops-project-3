@@ -15,7 +15,18 @@ commands:
             - slack/notify:
                 event: pass
                 template: basic_success_1
-
+    
+    destroy_environment:
+        steps:
+            - run:
+                name: Destroy environment backend
+                # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
+                # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
+                when: on_fail
+                command: |
+                    aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+                    aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+                
 
 jobs:
     build-frontend:
@@ -168,6 +179,10 @@ jobs:
                     --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
                     --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
                     --tags project=udapeople
+            - destroy_environment
+            - notify_slack_error
+            - notify_slack_pass
+            
 
 workflows:
     default:
