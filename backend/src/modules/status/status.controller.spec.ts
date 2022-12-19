@@ -25,7 +25,7 @@ describe('Status Controller', () => {
     expect(status).toEqual({
       status: 'ok',
       version: 'test',
-      environment: 'testing'x,
+      environment: 'testing',
     });
   });
 });
