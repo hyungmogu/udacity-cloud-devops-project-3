@@ -27,7 +27,6 @@ commands:
                     aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
                     aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
                 
-
 jobs:
     build-frontend:
         docker:
@@ -180,10 +179,28 @@ jobs:
                     --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
                     --tags project=udapeople
             - destroy_environment
-            - notify_slack_error
-            - notify_slack_pass
             
-
+    configure-infrastructure:
+        docker:
+            # Docker image here
+            - image: python:3.7-alpine3.11
+        working-directiory: ~/repo/
+        steps:
+            - checkout
+            - add_ssh_keys:
+                # You can get this ID in the section where you registered the SSH Key
+                fingerprints: ["c6:68:4c:83:a5:97:75:bb:d4:71:31:b9:f3:86:3d:e4"] 
+            - run:
+                name: Install Ansible
+                command: |
+                    # Install Ansible
+                    apk add --no-cache ansible
+            - run:
+                name: Run Playbook and Configure server
+                working_directory: ~/repo/cloud_devops_nd_unit_3_proj/.circleci/ansible
+                command: |
+                    # Your command
+                    ansible-playbook -i inventory.txt configure-server.yml
 workflows:
     default:
         jobs:
