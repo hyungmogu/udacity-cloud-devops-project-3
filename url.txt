@@ -1,3 +1,0 @@
-[URL01]
-https://github.com/hyungmogu/udacity-cloud-devops-project-3
- 

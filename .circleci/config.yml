@@ -126,6 +126,19 @@ jobs:
                     cd frontend
                     npm install
                     npm audit fix --audit-level=critical --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
+                    npm audit fix --force
                     npm audit --audit-level=critical
             - notify_slack_error
             - notify_slack_pass
@@ -179,6 +192,8 @@ jobs:
                     --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
                     --tags project=udapeople
             - destroy_environment
+            - notify_slack_error
+            - notify_slack_pass
             
     configure-infrastructure:
         docker:
@@ -201,6 +216,8 @@ jobs:
                 command: |
                     # Your command
                     ansible-playbook -i inventory.txt configure-server.yml
+            - notify_slack_error
+            - notify_slack_pass
 workflows:
     default:
         jobs:
@@ -214,5 +231,8 @@ workflows:
                 requires: [build-frontend]
             - scan-backend:
                 requires: [build-backend]
-            - deploy-infrastructure
+            - deploy-infrastructure:
+                requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+            - configure-infrastructure:
+                requires: [deploy-infrastructure]
         
