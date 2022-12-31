@@ -192,19 +192,16 @@ jobs:
                     --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
                     --tags project=udapeople
             - destroy_environment
-            - notify_slack_error
-            - notify_slack_pass
             
     configure-infrastructure:
         docker:
             # Docker image here
             - image: python:3.7-alpine3.11
-        working_directory: ~/repo/
         steps:
             - checkout
             - add_ssh_keys:
                 # You can get this ID in the section where you registered the SSH Key
-                fingerprints: ["c6:68:4c:83:a5:97:75:bb:d4:71:31:b9:f3:86:3d:e4"] 
+                fingerprints: ["f2:09:6e:3a:0b:55:6f:82:9a:5a:f1:18:8c:c4:82:61"] 
             - run:
                 name: Install Ansible
                 command: |
@@ -212,12 +209,10 @@ jobs:
                     apk add --no-cache ansible
             - run:
                 name: Run Playbook and Configure server
-                working_directory: ~/repo/cloud_devops_nd_unit_3_proj/.circleci/ansible
                 command: |
                     # Your command
+                    cd .circleci/ansible
                     ansible-playbook -i inventory.txt configure-server.yml
-            - notify_slack_error
-            - notify_slack_pass
 workflows:
     default:
         jobs:
@@ -233,6 +228,9 @@ workflows:
                 requires: [build-backend]
             - deploy-infrastructure:
                 requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+                filters:
+                    branches:
+                        only: [test-feature-branch]
             - configure-infrastructure:
-                requires: [deploy-infrastructure]
+                requires: [test-frontend, test-backend, scan-frontend, scan-backend]
         
