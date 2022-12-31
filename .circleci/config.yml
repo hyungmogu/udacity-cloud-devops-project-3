@@ -184,7 +184,7 @@ jobs:
         docker:
             # Docker image here
             - image: python:3.7-alpine3.11
-        working-directiory: ~/repo/
+        working_directory: ~/repo/
         steps:
             - checkout
             - add_ssh_keys:
