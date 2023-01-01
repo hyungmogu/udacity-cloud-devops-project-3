@@ -201,7 +201,12 @@ jobs:
                     --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                     --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
                     --tags project=udapeople
-            
+            - run:
+                name: Add all servers to inventory
+                command: |
+                    aws ec2 describe-instances \
+                    --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                    --output text >> .circleci/ansible/inventory.txt
             - run:
                 name: Ensure frontend infrastructure exist
                 command: |
@@ -228,10 +233,10 @@ jobs:
                     apk add --no-cache ansible
             - run:
                 name: Run Playbook and Configure server
+                no_output_timeout: 30m
                 command: |
                     # Your command
                     cd .circleci/ansible
-                    export ANSIBLE_HOST_KEY_CHECKING=False
                     ansible-playbook -i inventory.txt configure-server.yml
     run-migrations:
         docker:
@@ -260,7 +265,6 @@ jobs:
                     fi
             # Here's where you will add some code to rollback on failure 
             - revert-migrations
-
 
 workflows:
     default:
