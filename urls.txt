@@ -2,4 +2,4 @@
 https://github.com/hyungmogu/udacity-cloud-devops-project-3
 
 [URL02]
-http://udapeople-61f47a3.s3-website-us-east-1.amazonaws.com
+http://udapeople-e1aeadf.s3-website-us-east-1.amazonaws.com
