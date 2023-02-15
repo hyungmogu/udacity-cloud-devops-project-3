@@ -499,8 +499,7 @@ jobs:
                     # your code here
                     export OldWorkflowID=$(aws cloudformation \
                     list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-                    --no-pagina
-                    te --output text)
+                    --no-paginate --output text)
                     echo OldWorkflowID: "${OldWorkflowID}"
                     echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
                     # Fetch the stack names          
@@ -517,6 +516,7 @@ jobs:
                         aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
                     else
                         echo 'ERROR: CANNOT CLEAN UP'
+                        exit 1;
                     fi
             - destroy_environment 
             - revert-migrations
