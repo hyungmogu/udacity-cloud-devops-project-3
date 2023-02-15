@@ -425,7 +425,7 @@ jobs:
                     # Fetch and prepare the BACKEND_IP env var
                     if curl "${API_URL}/api/status" | grep "ok"
                     then
-                        exit 0
+                        exit 1
                     else
                         exit 1
                     fi
@@ -502,6 +502,7 @@ jobs:
                     --no-paginate --output text)
                     echo OldWorkflowID: "${OldWorkflowID}"
                     echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+
                     # Fetch the stack names          
                     export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                             --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
