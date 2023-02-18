@@ -520,9 +520,9 @@ jobs:
                         if [[ "${CurrentWorkflowID}" != "${WorkFlowID}" ]] 
                         then
                             echo 'CLEANING UP OLD STACK'
-                            aws s3 rm "s3://${OldWorkflowID}" --recursive
-                            aws cloudformation delete-stack --stack-name "${OldWorkflowID}-backend"
-                            aws cloudformation delete-stack --stack-name "${OldWorkflowID}-frontend"
+                            aws s3 rm "s3://${WorkFlowID}" --recursive
+                            aws cloudformation delete-stack --stack-name "${WorkFlowID}-backend"
+                            aws cloudformation delete-stack --stack-name "${WorkFlowID}-frontend"
                         fi
                     done
 
