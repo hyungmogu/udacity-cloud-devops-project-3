@@ -497,18 +497,18 @@ jobs:
                 name: Remove old stacks and files
                 command: |
                     # Get current workflow ID
-                    export CurrentWorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+                    CurrentWorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
                     echo "Current Workflow Id: ${CurrentWorkflowID}"
 
                     # if ${CIRCLE_WORKFLOW_ID:0:7} is empty, then raise error
                     if [[ -z "${CIRCLE_WORKFLOW_ID:0:7}" ]]
                     then
-                        echo 'ERROR: CANNOT CLEAN UP'
+                        echo 'ERROR: CANNOT CLEAN UP.'
                         exit 1;
                     fi
 
                     # Get old workflow ID
-                    export OldWorkflowIDs=$(aws cloudformation \
+                    OldWorkflowIDs=$(aws cloudformation \
                     list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                     --no-paginate --output text)
 
@@ -516,7 +516,7 @@ jobs:
 
                     # For each WorkFlow ID,
                     # If Old Workflow ID is NOT Current Workflow ID, then delete
-                    for $WorkFlowID in "${OldWorkflowIDs[@]}"; do
+                    for WorkFlowID in "${OldWorkflowIDs[@]}"; do
                         if [[ "${CurrentWorkflowID}" != "${WorkFlowID}" ]] 
                         then
                             echo 'CLEANING UP OLD STACK'
