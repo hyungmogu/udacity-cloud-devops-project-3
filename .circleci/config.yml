@@ -496,23 +496,27 @@ jobs:
             - run:
                 name: Remove old stacks and files
                 command: |
-                    # Get Current Workflow ID with tag 'Udapeople'
-                    export CurrentWorkflowID=$(aws cloudformation \
+                    # Get current workflow ID
+                    export CurrentWorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+                    
+                    echo "Current Workflow Id: ${CurrentWorkflowID}"
+
+                    # Get old workflow ID
+                    export OldWorkflowIDs=$(aws cloudformation \
                     list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                     --no-paginate --output text)
 
-                    echo CurrentWorkflowID: "${CurrentWorkflowID}"
-                    echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
-
-                    # Get List of Workflow IDs
-                    ListWorkFlowIDs=
+                    echo "Old Workflow Id: ${OldWorkflowIDs}"
 
                     # For each WorkFlow ID,
                     # If Old Workflow ID is NOT Current Workflow ID, then delete
                     for $WorkFlowID in "${ListWorkFlowIDs[@]}"; do
                         if [[ "${CurrentWorkflowID}" != "${WorkFlowID}" ]] 
                         then
-
+                            echo 'CLEANING UP OLD STACK'
+                            aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+                            aws cloudformation delete-stack --stack-name "udapeople-${OldWorkflowID}-backend"
+                            aws cloudformation delete-stack --stack-name "udapeople-${OldWorkflowID}-frontend"
                         fi
                     done
 
