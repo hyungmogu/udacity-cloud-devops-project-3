@@ -468,6 +468,7 @@ jobs:
                 command: |
                     # Get current workflow ID
                     CurrentWorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+
                     echo "Current Workflow Id: ${CurrentWorkflowID}"
 
                     # if ${CIRCLE_WORKFLOW_ID:0:7} is empty, then raise error
@@ -482,7 +483,7 @@ jobs:
                     list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                     --no-paginate --output text)
 
-                    echo "Old Workflow Ids: ${OldWorkflowID}"
+                    echo "Old Workflow Id: ${OldWorkflowID}"
 
                     # If Old Workflow ID is NOT Current Workflow ID, then delete
                     if [[ "${CurrentWorkflowID}" != "${OldWorkflowID}" ]] 
