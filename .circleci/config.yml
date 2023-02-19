@@ -478,23 +478,20 @@ jobs:
                     fi
 
                     # Get old workflow ID
-                    OldWorkflowIDs=$(aws cloudformation \
+                    OldWorkflowID=$(aws cloudformation \
                     list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
                     --no-paginate --output text)
 
-                    echo "Old Workflow Ids: ${OldWorkflowIDs}"
+                    echo "Old Workflow Ids: ${OldWorkflowID}"
 
-                    # For each WorkFlow ID,
                     # If Old Workflow ID is NOT Current Workflow ID, then delete
-                    for WorkFlowID in "${OldWorkflowIDs[@]}"; do
-                        if [[ "${CurrentWorkflowID}" != "${WorkFlowID}" ]] 
-                        then
-                            echo 'CLEANING UP OLD STACK'
-                            aws s3 rm "s3://${WorkFlowID}" --recursive
-                            aws cloudformation delete-stack --stack-name "${WorkFlowID}-backend"
-                            aws cloudformation delete-stack --stack-name "${WorkFlowID}-frontend"
-                        fi
-                    done
+                    if [[ "${CurrentWorkflowID}" != "${OldWorkflowID}" ]] 
+                    then
+                        echo 'CLEANING UP OLD STACK'
+                        aws s3 rm "s3://${OldWorkflowID}" --recursive
+                        aws cloudformation delete-stack --stack-name "${OldWorkflowID}-backend"
+                        aws cloudformation delete-stack --stack-name "${OldWorkflowID}-frontend"
+                    fi
 
             - destroy_environment 
             - revert-migrations
